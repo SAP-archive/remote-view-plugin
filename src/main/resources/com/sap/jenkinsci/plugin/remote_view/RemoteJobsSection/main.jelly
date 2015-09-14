@@ -1,0 +1,55 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+    <j:if test="${section.name.length() > 0}">
+        <h2>${section.name}</h2>
+    </j:if>
+    <j:if test="${empty(section.getJobs())}">
+        <p>No jobs in this section.</p>
+    </j:if>
+
+    <table id="projectstatus" class="pane bigtable fixed">
+        <col width="100px" />
+        <col width="1000px" />
+        <th>Status</th>
+        <th>Name</th>
+
+        <j:forEach var="job" items="${section.getJobs()}">
+            <tr id="job_${job.name}" class="${job.disabled?'disabledJob':null} job-status-${job.getStatus()}">
+
+                <j:if test="${job.getStatus().indexOf('blue') != -1}">
+                    <j:set var="alt" value="Success"/>
+                    <j:set var="class" value="icon-blue icon-lg"/>
+                    <j:set var="src" value="${imagesURL}/32x32/blue.png"/>
+                </j:if>
+
+                <j:if test="${job.getStatus().indexOf('red') != -1}">
+                    <j:set var="alt" value="Failure"/>
+                    <j:set var="class" value="icon-red icon-lg"/>
+                    <j:set var="src" value="${imagesURL}/32x32/red.png"/>
+                </j:if>
+
+                <j:if test="${job.getStatus().indexOf('yellow') != -1}">
+                    <j:set var="alt" value="Unstable"/>
+                    <j:set var="class" value="icon-yellow icon-lg"/>
+                    <j:set var="src" value="${imagesURL}/32x32/yellow.png"/>
+                </j:if>
+
+                <j:if test="${job.getStatus().indexOf('aborted') != -1}">
+                    <j:set var="alt" value="Aborted"/>
+                    <j:set var="class" value="icon-aborted icon-lg"/>
+                    <j:set var="src" value="${imagesURL}/32x32/aborted.png"/>
+                </j:if>
+
+                <j:if test="${job.getStatus().indexOf('notbuilt') != -1}">
+                    <j:set var="alt" value="Not Build"/>
+                    <j:set var="class" value="icon-nobuilt icon-lg"/>
+                    <j:set var="src" value="${imagesURL}/32x32/aborted.png"/>
+                </j:if>
+
+                <td><img style="width: 32px; height: 32px; " alt= "${alt}" class="${class}" src="${src}" tooltip="${alt}" title="${alt}"/> </td>
+
+                <td><a href="${job.getUrl()}">${job.getName()}</a></td>
+            </tr>
+        </j:forEach>
+    </table>
+
+</j:jelly>

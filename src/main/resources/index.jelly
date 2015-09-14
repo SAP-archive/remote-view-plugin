@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  This plugin fetchs the jobs of configured remote Jenkins CI servers and displays them in one view.
+</div>

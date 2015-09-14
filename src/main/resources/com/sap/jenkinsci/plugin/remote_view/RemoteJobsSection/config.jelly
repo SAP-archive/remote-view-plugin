@@ -1,0 +1,156 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+    <!-- Name-->
+    <f:entry title="Name" field="name">
+        <f:textbox />
+    </f:entry>
+
+    <!-- URL-->
+    <f:entry title="${%Url}" field="remoteURL" help="/plugin/remote-view-plugin/help-sectionConfigURL.html">
+        <f:textbox name="remoteURL" id="textboxURL"/>
+    </f:entry>
+
+    <f:advanced>
+        <!-- Align-->
+        <f:entry title="${%Align}" field="alignment">
+            <f:enum>${it.description}</f:enum>
+        </f:entry>
+
+        <!-- Width-->
+        <f:entry title="${%Width}" field="width">
+            <f:enum>${it.description}</f:enum>
+        </f:entry>
+
+        <!-- Filter -->
+        <f:entry title="${%Filter}" help="/plugin/remote-view-plugin/help-sectionConfigStatus.html">
+            <j:set var="counter" value="${instance.getCounter()}"/>
+
+            <f:checkbox onclick="enableFilter(this)" name="${counter.toString().concat('enabled')}" checked="${instance.isFilterEnabled()}"/> ${%Enabled}
+            <br></br>
+            <f:checkbox class="ich" name="${counter.toString().concat('blue')}" checked="${instance.isBlue()}"/> ${%Stable}
+            <f:checkbox name="${counter.toString().concat('yellow')}" checked="${instance.isYellow()}"/> ${%Unstable}
+            <f:checkbox name="${counter.toString().concat('red')}" checked="${instance.isRed()}"/> ${%Failed}
+            <f:checkbox name="${counter.toString().concat('aborted')}" checked="${instance.isAborted()}"/> ${%Aborted}
+        </f:entry>
+
+        <!-- Display Button -->
+        <f:entry field="displayButton">
+
+            <j:if test="${instance.available}">
+                <button type="button" class="displayJobsButton">Display Jobs</button>
+            </j:if>
+
+            <j:if test="${!instance.available}">
+                <button disabled="false" type="button" class="displayJobsButton">Display Jobs</button>
+                <p style="font-family: 'Open sans', sans-serif; color: #777777; font-size: 14px; display:inline;" >
+                In order to enable the "Display Jobs"-Button click on the "Apply"-Button down the page and refresh the whole page (F5).
+                </p>
+            </j:if>
+
+            <!-- Element to append the jobs which are to be displayed -->
+            <ul id="jobs">
+                <j:if test="${!empty(instance.getDisplayJobs())}">
+                    <j:forEach var="job" items="${instance.getAllJobs()}">
+                        <j:set var="displayJobs" value="${instance.getDisplayJobs()}"/>
+                        <j:set var="counter" value="${instance.getCounter()}"/>
+                        <j:set var="concat" value="${counter.toString().concat(job.getName())}"/>
+                        <f:checkbox name="${concat}" checked="${displayJobs.get(concat).getStatus()}" />
+                        <label class="attach-previous">${job.getName()}</label>
+                        <br/>
+
+                    </j:forEach>
+                </j:if>
+            </ul>
+        </f:entry>
+
+
+        <script type="text/javascript">
+
+<!--
+                window.onload = function (){
+                    enableFilter()
+                }
+-->
+
+                function enableFilter(t){
+                    if(t.checked === true){
+                        t.nextElementSibling.nextElementSibling.disabled = false;
+                        <!-- t.nextElementSibling.nextElementSibling.setAttribute('onClick', 'return true'); -->
+                        t.nextElementSibling.nextElementSibling.nextElementSibling.disabled = false;
+                        t.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.disabled = false;
+                        t.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.disabled = false;
+                    }else{
+                        t.nextElementSibling.nextElementSibling.disabled = true;
+                        t.nextElementSibling.nextElementSibling.nextElementSibling.disabled = true;
+                        t.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.disabled = true;
+                        t.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.disabled = true;
+                    }
+                }
+
+				function endsWith(str, suffix) {
+    					return str.indexOf(suffix, str.length - suffix.length) !== -1;
+				}
+
+                jq( ".displayJobsButton" ).click(function() {
+
+                    var section = <st:bind value="${instance}"/>
+                    var button = this;
+                    var remoteURL = button.parentNode.parentNode.
+                                        previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.
+                                        previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.
+                                        childNodes[2].childNodes[1].value;
+                    var prefix;
+                    var concat;
+
+                    section.getCounter(function(t) {
+                        prefix = t.responseObject();
+                    })
+
+                    <!-- Extend URL in order to read from API -->
+                    if( endsWith(remoteURL, "/") ) {
+                        remoteURL = remoteURL + "api/xml"
+                    } else {
+						remoteURL = remoteURL + "/api/xml"                    
+                    }
+
+                    section.getJobsJS(remoteURL, function(t) {
+                        var resp = t.responseObject();
+
+                        for (var i = 0; i &lt; resp.length; i++) {
+
+                    <!-- Create input element for job name -->
+                            var input = document.createElement("input");
+                            input.type = "checkbox";
+                            input.name = prefix + resp[i].name;
+                            input.checked = false;
+
+                    <!-- Create label for job name -->
+                            var label = document.createElement("label");
+                            label.class = "attach-previous";
+                            label.innerHTML = resp[i].name;;
+
+                    <!-- Create br element -->
+                            var br = document.createElement("br");
+
+                            button.nextSibling.appendChild(input);
+                            button.nextSibling.appendChild(label);
+                            button.nextSibling.appendChild(br);
+                        }
+                    })
+
+                    <!-- Delete current displayed jobs; -->
+                    var jobsNode = button.nextSibling;
+                    while (jobsNode.firstChild) {
+                        jobsNode.removeChild(jobsNode.firstChild);
+                    }
+
+                    <!-- Don't know why this works, but it does -->
+                    for(var i = 0; i &lt; resp.length; i++){
+                        concat = "#" + prefix + resp[i].name;
+                        jobsNode.removeChild(concat);
+                    }
+
+                });
+            </script>
+
+    </f:advanced>
+</j:jelly>

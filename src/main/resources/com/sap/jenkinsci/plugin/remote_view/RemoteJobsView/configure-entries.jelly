@@ -1,0 +1,25 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+        <script type="text/javascript">
+            jq = jQuery.noConflict();
+        </script>
+
+    <l:yui module="treeview" />
+    <link rel="stylesheet" type="text/css" href="${rootURL}/scripts/yui/treeview/assets/skins/sam/treeview.css" />
+
+
+                <f:section title="Sections">
+                    <j:invokeStatic var="allSections" className="com.sap.jenkinsci.plugin.remote_view.SectionedViewSection" method="all"/>
+
+                    <f:block>
+                        <f:hetero-list name="sections" hasHeader="true"
+                                       descriptors="${allSections}"
+                                       items="${it.sections}"
+                                       targetType="${it.class}"
+                                       addCaption="${%Add Section}"
+                                       deleteCaption="${%Delete section}"/>
+                    </f:block>
+
+                </f:section>
+
+</j:jelly>
