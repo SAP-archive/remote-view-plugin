@@ -1,11 +1,12 @@
 # remote-view-plugin
-## A [Jenkins CI](https://jenkins-ci.org/) plugin to view build jobs on remote [Jenkins CI](https://jenkins-ci.org/) servers
+
+### A [Jenkins CI](https://jenkins-ci.org/) plugin to view build jobs on remote [Jenkins CI](https://jenkins-ci.org/) servers
 
 ## NEW REPO LOCATION
-As we're new have the plugin hosted by [Jenkins CI](https://jenkins-ci.org/), we had to move the repo to:
+As we're now have the plugin hosted by [Jenkins CI](https://jenkins-ci.org/), we had to move the repo to:
 [Remote-Jobs-View-Plugin](https://github.com/jenkinsci/remote-jobs-view-plugin)
 
-## License
+### License
 
 Copyright 2015 by [SAP SE](http://www.sap.com) and made available under the
 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0). 
