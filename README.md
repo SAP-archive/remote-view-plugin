@@ -1,11 +1,9 @@
 # remote-view-plugin
 ## A [Jenkins CI](https://jenkins-ci.org/) plugin to view build jobs on remote [Jenkins CI](https://jenkins-ci.org/) servers
 
-### What does this plugin provide?
-This [Jenkins CI](https://jenkins-ci.org/) plugin provides a view that will show you the build status of jobs executed on remote (master) [Jenkins CI](https://jenkins-ci.org/) servers. You can specify several remote [Jenkins CI](https://jenkins-ci.org/) servers to be listed in one view. Also you can select which (remote) jobs should be listed.
-
-### How can I use it?
-Clone the repository, build the project (using Apache Maven) and install the resulting remote-view-plugin.hpi plugin into your [Jenkins CI](https://jenkins-ci.org/) server which should display the new view. 
+## NEW REPO LOCATION
+As we're new have the plugin hosted by [Jenkins CI](https://jenkins-ci.org/), we had to move the repo to:
+[Remote-Jobs-View-Plugin](https://github.com/jenkinsci/remote-jobs-view-plugin)
 
 ## License
 
